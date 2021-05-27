@@ -992,7 +992,7 @@ Class dzn_baseClassToSwizzleForTarget(id target)
             views[[subviewStrings lastObject]] = _button;
             
             [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(padding@750)-[button(>=0)]-(padding@750)-|"
-                                                                                     options:0 metrics:metrics views:views]];
+                                                                                     options:0 metrics:@{@"padding": @(padding * 4)} views:views]];
         }
         // or removes from its superview
         else {
@@ -1005,9 +1005,10 @@ Class dzn_baseClassToSwizzleForTarget(id target)
         
         // Build a dynamic string format for the vertical constraints, adding a margin between each element. Default is 11 pts.
         for (int i = 0; i < subviewStrings.count; i++) {
-            
             NSString *string = subviewStrings[i];
-            [verticalFormat appendFormat:@"[%@]", string];
+            NSString *heightConstraint = [string isEqualToString:@"button"] ? @"(44)" : @"";
+
+            [verticalFormat appendFormat:@"[%@%@]", string, heightConstraint];
             
             if (i < subviewStrings.count-1) {
                 [verticalFormat appendFormat:@"-(%.f@750)-", verticalSpace];
